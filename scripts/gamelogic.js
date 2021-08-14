@@ -1,8 +1,10 @@
   //block dimensions
   const BLOCK_LENGTH = 25;
+
   const BLOCK_MARGIN = 1;
 
   const COL = 10;
+
   const ROWS = 20;
 
   const BLOCKS = [
@@ -148,6 +150,7 @@
     GAMESTATE.rowsCleared += numOfClearedRows;
 
     document.querySelector('#score').innerHTML = GAMESTATE.score;
+
     document.querySelector('#rows').innerHTML = GAMESTATE.rowsCleared;
   }
 
@@ -431,7 +434,10 @@
 
   document.querySelector('#play').addEventListener('click', function(event){
     document.querySelector('.menu').style.display = 'none';
+
     document.querySelector('.right').style.display='block';
+
     document.querySelector('.game').style.backgroundColor = 'rgb(195, 221, 255)';
+
     startTheGame();
   });
