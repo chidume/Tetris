@@ -1,0 +1,123 @@
+body {
+  margin: 0 auto;
+  padding: 4px;
+}
+
+#wrapper {
+  padding: 20px;
+  overflow: auto;
+  margin: auto;
+}
+
+.game { 
+  width: 250px;
+  margin: 4px auto;
+}
+
+#gameboard {
+  width: 250px;
+  height: 500px;
+  margin: 4px auto; 
+  position: relative;
+}
+
+.menu {
+  width: 248px;
+  height: 498px;
+  position: relative;
+  background-color: white;
+  border: 1px solid #2C2F33;
+  border-radius: 8px;
+}
+
+#title {
+  font-family: Orbitron;
+  font-size: 48px;
+  font-weight: 900;
+  color: #2C2F33;
+  text-align: center;
+  margin: 10px;
+  position: relative;
+  top: 40px;	
+}
+
+.panel {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+}
+
+.panel div {
+  width: 80%;
+  border: 1px solid #2C2F33;
+  border-radius: 10px;
+
+  color: #f9f9fa;
+  background-color: #2C2F33;
+
+  font-family: Orbitron;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 2;
+  text-align: center;
+  margin: 10px auto;
+}
+
+.panel div:hover {
+  color: #2C2F33;
+  background-color: white;
+  cursor: pointer;
+}
+
+#scoreboard {
+  width: 224px;
+  border: 1px solid #2C2F33;
+  font-family: Orbitron;
+  font-size: 26px;
+  margin: 10px auto;
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+#rowScore {
+  width: 224px;
+  border: 1px solid #2C2F33;
+  font-family: Orbitron;
+  font-size: 26px;
+  margin: 10px auto;
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+#score {
+  float: right;
+}
+
+#rows {
+  float: right;
+}
+
+.container {
+  width: 48%;
+  float: left;
+  margin: 4px;
+}
+
+.parent-container {
+  width: 600px;
+  overflow: auto;
+  margin: auto;
+}
+
+#next {
+  width: 150px;
+  height: 125px;
+  border-radius: 10px;
+  margin: 10px auto;
+  position: relative;
+  background-color: rgb(195, 221, 255);
+}
+
+.right {
+  display: none;
+}
