@@ -1,0 +1,23 @@
+# TETRIS
+
+An implementation of the classic game using HTML/CSS/JavaScript
+
+## Purpose
+The purpose of this project is improvement my HTML/CSS/JavaScript 
+while also building a portfolio.
+
+## Upcoming Features
+  - music and sound effects
+
+  - levels
+
+  - high score list
+
+  - touch support
+
+  - pause/play button
+
+  - settings menu
+
+## License
+  [MIT](https://choosealicense.com/licenses/mit/)
