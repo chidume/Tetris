@@ -75,12 +75,15 @@
   /**********************************************************/
 
   function startTheGame() {
+    GAMESTATE.level = 0;
 
     GAMESTATE.score = 0;
 
     GAMESTATE.rowsCleared = 0;
 
     GAMESTATE.tetrisboard = [];
+
+    GAMESTATE.blockInterval = 750;
 
     for(let i = 0; i < ROWS; i++){ 
       let temp = new Array(COL).fill(0);
@@ -416,7 +419,7 @@
     let startTime = performance.now();
       
     requestAnimationFrame( function moveBlock(currentTime) {
-      if(currentTime - startTime < 750) {
+      if(currentTime - startTime < GAMESTATE.blockInterval) {
         requestAnimationFrame(moveBlock);
         return;
       }

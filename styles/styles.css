@@ -69,46 +69,19 @@ body {
   cursor: pointer;
 }
 
-#scoreboard {
+.scoreboard div{
   width: 224px;
   border: 1px solid #2C2F33;
   font-family: Orbitron;
-  font-size: 26px;
+  font-size: 16px;
   margin: 10px auto;
   border-radius: 8px;
-  padding: 0 12px;
+  padding: 0 6px;
+  line-height: 2;
 }
 
-#rowScore {
-  width: 224px;
-  border: 1px solid #2C2F33;
-  font-family: Orbitron;
-  font-size: 26px;
-  margin: 10px auto;
-  border-radius: 8px;
-  padding: 0 12px;
-}
-
-#level {
-  width: 224px;
-  border: 1px solid #2C2F33;
-  font-family: Orbitron;
-  font-size: 26px;
-  margin: 10px auto;
-  border-radius: 8px;
-  padding: 0 12px;
-}
-
-#score {
+.scoreboard span {
   float: right;
-}
-
-#rows {
-  float: right;
-}
-
-#levelcount {
-  float: right
 }
 
 .container {
