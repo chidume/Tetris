@@ -256,7 +256,7 @@
     if (location == GAMEBOARD && nextBlock) {
 
       for(let i = 0; i < BLOCKS.length; i++) {
-        if(BLOCKS[i].name == nextBlock.blockName) randomVal = i;  
+        if(BLOCKS[i].name == nextBlock.blockName) blockConfig.index= i;  
       }
 
     }
