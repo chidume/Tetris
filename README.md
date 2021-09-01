@@ -3,7 +3,7 @@
 An implementation of the classic game using HTML/CSS/JavaScript
 
 ## Purpose
-The purpose of this project is improvement my HTML/CSS/JavaScript 
+The purpose of this project is to improve my HTML/CSS/JavaScript 
 while also building a portfolio.
 
 ## Upcoming Features
