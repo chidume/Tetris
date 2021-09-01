@@ -1,4 +1,3 @@
-  //block dimensions
   const BLOCK_LENGTH = 25;
 
   const BLOCK_MARGIN = 1;
@@ -54,7 +53,7 @@
                   [[0,1], [1,1], [1,2], [2,2]],
                   [[1,0], [0,1], [1,1], [0,2]], ]
     },
-  ]
+  ];
 
   const GAMESTATE = {};
 
@@ -206,25 +205,8 @@
 
   /**********************************************************/
 
-  function createBlock(location) {
-    let distX = Math.floor(Math.random() * 7);
-
-    let distY = 0;
-
-    let randomVal = Math.floor(Math.random() * BLOCKS.length);
-
-    if(location == NEXTQUEUE) {
-      distX = 1;
-      distY = 2;
-    }else if (location == GAMEBOARD && nextBlock) {
-
-      for(let i = 0; i < BLOCKS.length; i++) {
-        if(BLOCKS[i].name == nextBlock.blockName) randomVal = i;  
-      }
-
-    }
-
-    let randomBlock = BLOCKS[randomVal];
+  function createBlock(blockConfig) {
+    let randomBlock = BLOCKS[blockConfig.index];
 
     let randomBlockPosition = randomBlock.position[0];
 
@@ -235,9 +217,9 @@
 
       block.style.backgroundColor = randomBlock.color;
 
-      block.style.left = (coords[0] + distX) * BLOCK_LENGTH + 'px';
+      block.style.left = (coords[0] + blockConfig.left) * BLOCK_LENGTH + 'px';
 
-      block.style.top = (coords[1]+ distY) * BLOCK_LENGTH + 'px';
+      block.style.top = (coords[1]+ blockConfig.top) * BLOCK_LENGTH + 'px';
 
       block.style.width = BLOCK_LENGTH - BLOCK_MARGIN + 'px'; 
 
@@ -250,7 +232,7 @@
 
     return { blockName: randomBlock.name,  
              blocks: newBlockInfo,
-             dx: distX,
+             dx: blockConfig.left,
              dy: 0, 
              currPos: 0,
              positions: randomBlock.position };
@@ -258,18 +240,36 @@
   }
 
   function spawnBlockOn(location) {
+    const blockConfig = {};
 
-    let elem = document.getElementById(location);
+    blockConfig.left = Math.floor(Math.random() * 7);
 
-    if(location == GAMEBOARD) {
-      newBlock = createBlock(GAMEBOARD);
-      newBlock.blocks.forEach(block => elem.append(block));
-    }
+    blockConfig.top = 0;
+
+    blockConfig.index = Math.floor(Math.random() * BLOCKS.length);
 
     if(location == NEXTQUEUE) {
-      nextBlock = createBlock(NEXTQUEUE);
-      nextBlock.blocks.forEach(block => elem.append(block));
+      blockConfig.top = 2;
+      blockConfig.left = 1;
     }
+
+    if (location == GAMEBOARD && nextBlock) {
+
+      for(let i = 0; i < BLOCKS.length; i++) {
+        if(BLOCKS[i].name == nextBlock.blockName) randomVal = i;  
+      }
+
+    }
+
+    let loc = document.getElementById(location);
+
+    let tempBlock = createBlock(blockConfig);
+
+    tempBlock.blocks.forEach(block => loc.append(block));
+
+    if(location == GAMEBOARD) newBlock = tempBlock;
+
+    if(location == NEXTQUEUE) nextBlock = tempBlock;
   }
 
   function gameOver() {
