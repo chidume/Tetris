@@ -63,9 +63,9 @@
 
   const MOVING_BLOCK = 2;
 
-  const GAMEBOARD = 'gameboard';
-
   const NEXTQUEUE = 'next';
+
+  const GAMEBOARD = 'gameboard';
 
   let newBlock;
 
@@ -472,4 +472,8 @@
     if(pausedMusic) playMusic();
 
     play();
+  });
+
+  document.documentElement.addEventListener('keydown', function(event) {
+    if(event.key == 'm') playMusic();
   });
