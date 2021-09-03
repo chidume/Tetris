@@ -47,7 +47,7 @@ body {
   top: 50%;
 }
 
-.panel div {
+.button {
   width: 80%;
   border: 1px solid #2C2F33;
   border-radius: 10px;
@@ -63,7 +63,7 @@ body {
   margin: 10px auto;
 }
 
-.panel div:hover {
+.button:hover {
   color: #2C2F33;
   background-color: white;
   cursor: pointer;
@@ -102,9 +102,5 @@ body {
   border-radius: 10px;
   margin: 10px auto;
   position: relative;
-  background-color: rgb(195, 221, 255);
-}
-
-.right {
-  display: none;
+  background-color: #2C2F33;
 }

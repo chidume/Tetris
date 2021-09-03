@@ -7,7 +7,7 @@ The purpose of this project is to improve my HTML/CSS/JavaScript
 while also building a portfolio.
 
 ## Upcoming Features
-  - music and sound effects
+  - sound effects
 
   - levels
 
