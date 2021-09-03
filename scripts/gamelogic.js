@@ -1,10 +1,10 @@
-  const BLOCK_LENGTH = 25;
-
-  const BLOCK_MARGIN = 1;
-
   const COL = 10;
 
   const ROWS = 20;
+
+  const BLOCK_LENGTH = 25;
+
+  const BLOCK_MARGIN = 1;
 
   const BLOCKS = [
     { name: 'I', 
@@ -71,9 +71,13 @@
 
   let nextBlock;
 
+  let pausedMusic = true;
+
+  let backgroundMusic = loadBackgroundMusic();
+
   /**********************************************************/
 
-  function startTheGame() {
+  function initializeGamestate() {
     GAMESTATE.level = 0;
 
     GAMESTATE.score = 0;
@@ -97,8 +101,6 @@
     }
 
     document.addEventListener('keydown', gameKeys);
-
-    play();
   }
 
   function getRowCol(block) {
@@ -242,11 +244,12 @@
   function spawnBlockOn(location) {
     const blockConfig = {};
 
-    blockConfig.left = Math.floor(Math.random() * 7);
-
-    blockConfig.top = 0;
-
     blockConfig.index = Math.floor(Math.random() * BLOCKS.length);
+
+    if(location == GAMEBOARD) {
+      blockConfig.top = 0;
+      blockConfig.left = Math.floor(Math.random() * 7);
+    }
 
     if(location == NEXTQUEUE) {
       blockConfig.top = 2;
@@ -254,11 +257,9 @@
     }
 
     if (location == GAMEBOARD && nextBlock) {
-
       for(let i = 0; i < BLOCKS.length; i++) {
         if(BLOCKS[i].name == nextBlock.blockName) blockConfig.index= i;  
       }
-
     }
 
     let loc = document.getElementById(location);
@@ -435,12 +436,40 @@
     }); 
   }
 
+  function loadBackgroundMusic() {
+    let backgroundMusic = new Audio("sounds/West Bad - Jeremy Black.mp3");
+
+    backgroundMusic.loop = true;
+
+    document.querySelector('#backgroundmusic').addEventListener('click', playMusic);
+
+    return backgroundMusic;
+  }
+
+  function playMusic() {
+    let bgm = document.querySelector('#backgroundmusic');
+
+    if (pausedMusic) {
+      backgroundMusic.play();
+      pausedMusic = !pausedMusic;
+      bgm.innerHTML = "MUSIC OFF (M)";
+    }else {
+      backgroundMusic.pause();
+      pausedMusic = !pausedMusic;
+      bgm.innerHTML = "MUSIC ON (M)";
+    }
+  }
+
   document.querySelector('#play').addEventListener('click', function(event){
     document.querySelector('.menu').style.display = 'none';
 
     document.querySelector('.right').style.display='block';
 
-    document.querySelector('.game').style.backgroundColor = 'rgb(195, 221, 255)';
+    document.querySelector('.game').style.backgroundColor = '#2C2F33';
 
-    startTheGame();
+    initializeGamestate();
+
+    if(pausedMusic) playMusic();
+
+    play();
   });
