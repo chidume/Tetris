@@ -188,7 +188,6 @@
       numOfClearedRows++;
     }
 
-
     return numOfClearedRows;
   }
 
@@ -253,7 +252,6 @@
              dy: 0, 
              currPos: 0,
              positions: randomBlock.position };
-
   }
 
   function spawnBlockOn(location) {
@@ -482,8 +480,6 @@
 
   document.querySelector('#play').addEventListener('click', function(event){
     document.querySelector('.menu').style.display = 'none';
-
-    document.querySelector('.right').style.display='block';
 
     document.querySelector('.game').style.backgroundColor = '#2C2F33';
 
