@@ -482,7 +482,7 @@
   }
 
   function setMenuButtonListeners(event) {
-    if(event.target.id = 'music') playMusic();
+    if(event.target.id == 'music') playMusic();
   }
 
   function loadSettingsMenu() {
@@ -505,7 +505,7 @@
   }
 
   document.querySelector('#play').addEventListener('click', function(event){
-    document.querySelector('.menu').style.display = 'none';
+    document.querySelector('.menu').remove();
 
     document.querySelector('.game').style.backgroundColor = '#2C2F33';
 
