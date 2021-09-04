@@ -54,6 +54,7 @@
                   [[1,0], [0,1], [1,1], [0,2]], ]
     },
   ];
+  const LINES_CLEARED_PER_LEVEL = 10;
 
   const GAMESTATE = {};
 
@@ -78,7 +79,7 @@
   /**********************************************************/
 
   function initializeGamestate() {
-    GAMESTATE.level = 0;
+    GAMESTATE.level = 1;
 
     GAMESTATE.score = 0;
 
@@ -156,6 +157,20 @@
     document.querySelector('#score').innerHTML = GAMESTATE.score;
 
     document.querySelector('#rows').innerHTML = GAMESTATE.rowsCleared;
+
+    updateLevel();
+  }
+
+  function updateLevel() {
+    let currentLevel = Math.floor( GAMESTATE.rowsCleared / LINES_CLEARED_PER_LEVEL ) + 1;
+    
+    if(currentLevel == GAMESTATE.level + 1) {
+      GAMESTATE.level = currentLevel;
+
+      document.querySelector('#levelcount').innerHTML = currentLevel;
+
+      GAMESTATE.blockInterval -= 20;
+    }
   }
 
   function clearRows() {
@@ -420,7 +435,9 @@
     let startTime = performance.now();
       
     requestAnimationFrame( function moveBlock(currentTime) {
-      if(currentTime - startTime < GAMESTATE.blockInterval) {
+      let timeElapsed = currentTime - startTime;
+
+      if(timeElapsed < GAMESTATE.blockInterval) {
         requestAnimationFrame(moveBlock);
         return;
       }
@@ -428,20 +445,23 @@
       startTime = currentTime;
       
       if(move()) {
-        requestAnimationFrame(moveBlock) 
+        requestAnimationFrame(moveBlock); 
       } else {
         nextBlock.blocks.forEach(block => block.remove());
         play();
       }
-    }); 
+    });
   }
 
   function loadBackgroundMusic() {
-    let backgroundMusic = new Audio("sounds/West Bad - Jeremy Black.mp3");
+    let soundtrack = "sounds/West Bad - Jeremy Black.mp3";
+
+    let backgroundMusic = new Audio(soundtrack);
 
     backgroundMusic.loop = true;
 
-    document.querySelector('#backgroundmusic').addEventListener('click', playMusic);
+    document.querySelector('#backgroundmusic')
+      .addEventListener('click', playMusic);
 
     return backgroundMusic;
   }

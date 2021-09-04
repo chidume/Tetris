@@ -9,8 +9,6 @@ while also building a portfolio.
 ## Upcoming Features
   - sound effects
 
-  - levels
-
   - high score list
 
   - touch support
