@@ -68,6 +68,8 @@
 
   const GAMEBOARD = 'gameboard';
 
+  const BUTTON_NAMES = ['PAUSE (P)', 'RESTART (R)', 'MUSIC OFF (M)', 'KEYS (K)'];
+
   let newBlock;
 
   let nextBlock;
@@ -458,14 +460,11 @@
 
     backgroundMusic.loop = true;
 
-    document.querySelector('#backgroundmusic')
-      .addEventListener('click', playMusic);
-
     return backgroundMusic;
   }
 
   function playMusic() {
-    let bgm = document.querySelector('#backgroundmusic');
+    let bgm = document.querySelector('#music');
 
     if (pausedMusic) {
       backgroundMusic.play();
@@ -478,6 +477,33 @@
     }
   }
 
+  function setKeyBinds(event) {
+    if(event.key == 'm') playMusic();
+  }
+
+  function setMenuButtonListeners(event) {
+    if(event.target.id = 'music') playMusic();
+  }
+
+  function loadSettingsMenu() {
+    let settingsElem = document.createElement('div');
+    settingsElem.classList.add('settings');
+
+    BUTTON_NAMES.forEach( buttonName => {
+      let buttonElement = document.createElement('div');
+      buttonElement.classList.add('button');
+      buttonElement.id = buttonName.split(" ")[0].toLowerCase();
+      buttonElement.innerHTML = buttonName;
+      settingsElem.append(buttonElement);
+    });
+
+    document.querySelector('.right').append(settingsElem);
+
+    document.documentElement.addEventListener('keydown', setKeyBinds);
+
+    document.querySelector('.settings').addEventListener('click', setMenuButtonListeners);
+  }
+
   document.querySelector('#play').addEventListener('click', function(event){
     document.querySelector('.menu').style.display = 'none';
 
@@ -485,11 +511,9 @@
 
     initializeGamestate();
 
+    loadSettingsMenu();
+
     if(pausedMusic) playMusic();
 
     play();
-  });
-
-  document.documentElement.addEventListener('keydown', function(event) {
-    if(event.key == 'm') playMusic();
   });

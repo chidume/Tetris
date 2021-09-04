@@ -56,11 +56,15 @@ body {
   background-color: #2C2F33;
 
   font-family: Orbitron;
-  font-size: 28px;
+  font-size: 16px;
   font-weight: 900;
   line-height: 2;
   text-align: center;
   margin: 10px auto;
+}
+
+.menu .button{
+  font-size: 28px;
 }
 
 .button:hover {
