@@ -6,6 +6,8 @@ An implementation of the classic game using HTML/CSS/JavaScript
 The purpose of this project is to improve my HTML/CSS/JavaScript 
 while also building a portfolio.
 
+You can interact with the project at (https://chidume.github.io/Tetris/)
+
 ## Upcoming Features
   - sound effects
 
