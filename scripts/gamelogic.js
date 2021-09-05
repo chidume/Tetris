@@ -76,6 +76,8 @@
 
   let nextBlock;
 
+  let pausedGame = false;
+
   let pausedMusic = true;
 
   let backgroundMusic = loadBackgroundMusic();
@@ -437,34 +439,36 @@
     spawnBlockOn(GAMEBOARD);
 
     spawnBlockOn(NEXTQUEUE);
-    
+
     if(gameOver()) return;
     
     updateBlockstate(MOVING_BLOCK);
-    
+
     let startTime = performance.now();
       
     reqId = requestAnimationFrame( function moveBlock(currentTime) {
       let timeElapsed = currentTime - startTime;
 
-      if(timeElapsed < GAMESTATE.blockInterval) {
-        reqId = requestAnimationFrame(moveBlock);
-        return;
+      if(timeElapsed > GAMESTATE.blockInterval) {
+        startTime = currentTime;
+
+        if(!move()) {
+          nextBlock.blocks.forEach(block => block.remove());
+          play();
+          return;
+        }
       }
-    
-      startTime = currentTime;
-      
-      if(move()) {
-        reqId = requestAnimationFrame(moveBlock); 
-      } else {
-        nextBlock.blocks.forEach(block => block.remove());
-        play();
-      }
+
+      reqId = requestAnimationFrame(moveBlock);
     });
   }
 
+  function pauseGame() {
+
+  }
+
   function restartGame() {
-    window.cancelAnimationFrame(reqId);
+    cancelAnimationFrame(reqId);
 
     if(newBlock) newBlock.blocks.forEach(block => block.remove());
 
@@ -528,12 +532,16 @@
     if(event.key == 'm') playMusic();
 
     if(event.key == 'r') restartGame();
+
+    if(event.key == 'p') pauseGame();
   }
 
   function setMenuButtonListeners(event) {
     if(event.target.id == 'music') playMusic();
 
     if(event.target.id == 'restart') restartGame();
+
+    if(event.target.id == 'pause') pauseGame();
   }
 
   document.querySelector('#play').addEventListener('click', function(event){
