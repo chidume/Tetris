@@ -468,7 +468,7 @@
 
   function pauseGame() {
     if(pausedGame) {
-      document.querySelector('.screen').remove();
+      removeOpaqueScreen();
       document.addEventListener('keydown', gameKeys);
       document.querySelector('#pause').innerHTML = 'PAUSE (P)';
       pausedGame = !pausedGame;
@@ -497,6 +497,8 @@
       for(let block of row) block.remove();
     }
 
+    removeOpaqueScreen();
+
     initializeGamestate();
 
     resetScoreboard();
@@ -510,6 +512,12 @@
     let opaqueScreen = document.createElement('div');
     opaqueScreen.classList.add('screen');
     document.querySelector('#gameboard').append(opaqueScreen);
+  }
+
+  function removeOpaqueScreen() {
+    let opaqueScreen = document.querySelector('.screen');
+
+    if(opaqueScreen) document.querySelector('.screen').remove();
   }
 
   function loadSettingsMenu() {
