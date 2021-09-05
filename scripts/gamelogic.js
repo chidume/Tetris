@@ -69,6 +69,8 @@
   const GAMEBOARD = 'gameboard';
 
   const BUTTON_NAMES = ['PAUSE (P)', 'RESTART (R)', 'MUSIC OFF (M)', 'KEYS (K)'];
+  
+  let reqId;
 
   let newBlock;
 
@@ -161,6 +163,14 @@
     document.querySelector('#rows').innerHTML = GAMESTATE.rowsCleared;
 
     updateLevel();
+  }
+
+  function resetScoreboard () {
+    document.querySelector('#rows').innerHTML = 0;
+
+    document.querySelector('#score').innerHTML = 0;
+
+    document.querySelector('#levelcount').innerHTML = 1;
   }
 
   function updateLevel() {
@@ -434,23 +444,60 @@
     
     let startTime = performance.now();
       
-    requestAnimationFrame( function moveBlock(currentTime) {
+    reqId = requestAnimationFrame( function moveBlock(currentTime) {
       let timeElapsed = currentTime - startTime;
 
       if(timeElapsed < GAMESTATE.blockInterval) {
-        requestAnimationFrame(moveBlock);
+        reqId = requestAnimationFrame(moveBlock);
         return;
       }
     
       startTime = currentTime;
       
       if(move()) {
-        requestAnimationFrame(moveBlock); 
+        reqId = requestAnimationFrame(moveBlock); 
       } else {
         nextBlock.blocks.forEach(block => block.remove());
         play();
       }
     });
+  }
+
+  function restartGame() {
+    window.cancelAnimationFrame(reqId);
+
+    if(newBlock) newBlock.blocks.forEach(block => block.remove());
+
+    if(nextBlock) nextBlock.blocks.forEach(block => block.remove());
+
+    for(let row of GAMESTATE.blockCollection) {
+      for(let block of row) block.remove();
+    }
+
+    initializeGamestate();
+
+    resetScoreboard();
+
+    play();
+  }
+
+  function loadSettingsMenu() {
+    let settingsElem = document.createElement('div');
+    settingsElem.classList.add('settings');
+
+    BUTTON_NAMES.forEach( buttonName => {
+      let buttonElement = document.createElement('div');
+      buttonElement.classList.add('button');
+      buttonElement.id = buttonName.split(" ")[0].toLowerCase();
+      buttonElement.innerHTML = buttonName;
+      settingsElem.append(buttonElement);
+    });
+
+    document.querySelector('.right').append(settingsElem);
+
+    document.documentElement.addEventListener('keydown', setKeyBinds);
+
+    document.querySelector('.settings').addEventListener('click', setMenuButtonListeners);
   }
 
   function loadBackgroundMusic() {
@@ -479,29 +526,14 @@
 
   function setKeyBinds(event) {
     if(event.key == 'm') playMusic();
+
+    if(event.key == 'r') restartGame();
   }
 
   function setMenuButtonListeners(event) {
     if(event.target.id == 'music') playMusic();
-  }
 
-  function loadSettingsMenu() {
-    let settingsElem = document.createElement('div');
-    settingsElem.classList.add('settings');
-
-    BUTTON_NAMES.forEach( buttonName => {
-      let buttonElement = document.createElement('div');
-      buttonElement.classList.add('button');
-      buttonElement.id = buttonName.split(" ")[0].toLowerCase();
-      buttonElement.innerHTML = buttonName;
-      settingsElem.append(buttonElement);
-    });
-
-    document.querySelector('.right').append(settingsElem);
-
-    document.documentElement.addEventListener('keydown', setKeyBinds);
-
-    document.querySelector('.settings').addEventListener('click', setMenuButtonListeners);
+    if(event.target.id == 'restart') restartGame();
   }
 
   document.querySelector('#play').addEventListener('click', function(event){
