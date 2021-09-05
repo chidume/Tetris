@@ -436,13 +436,15 @@
   /**********************************************************/
 
   function play() {
-    spawnBlockOn(GAMEBOARD);
+    if(!newBlock) {
+      spawnBlockOn(GAMEBOARD);
 
-    spawnBlockOn(NEXTQUEUE);
+      spawnBlockOn(NEXTQUEUE);
 
-    if(gameOver()) return;
+      if(gameOver()) return;
     
-    updateBlockstate(MOVING_BLOCK);
+      updateBlockstate(MOVING_BLOCK);
+    }
 
     let startTime = performance.now();
       
@@ -454,6 +456,7 @@
 
         if(!move()) {
           nextBlock.blocks.forEach(block => block.remove());
+          newBlock = null;
           play();
           return;
         }
@@ -464,13 +467,27 @@
   }
 
   function pauseGame() {
-
+    if(pausedGame) {
+      document.addEventListener('keydown', gameKeys);
+      document.querySelector('#pause').innerHTML = 'PAUSE (P)';
+      pausedGame = !pausedGame;
+      play();
+    }else {
+      document.removeEventListener('keydown', gameKeys);
+      document.querySelector('#pause').innerHTML = 'PLAY (P)';
+      pausedGame = !pausedGame;
+      window.cancelAnimationFrame(reqId);
+    }
   }
 
   function restartGame() {
-    cancelAnimationFrame(reqId);
+    document.querySelector('#pause').innerHTML = 'PAUSE (P)';
+
+    window.cancelAnimationFrame(reqId);
 
     if(newBlock) newBlock.blocks.forEach(block => block.remove());
+
+    newBlock = null;
 
     if(nextBlock) nextBlock.blocks.forEach(block => block.remove());
 
@@ -481,6 +498,8 @@
     initializeGamestate();
 
     resetScoreboard();
+
+    pausedGame = false;
 
     play();
   }

@@ -15,9 +15,5 @@ You can interact with the project at (https://chidume.github.io/Tetris/)
 
   - touch support
 
-  - pause/play button
-
-  - settings menu
-
 ## License
   [MIT](https://choosealicense.com/licenses/mit/)
