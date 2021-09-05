@@ -19,7 +19,5 @@ You can interact with the project at (https://chidume.github.io/Tetris/)
 
   - gameover screen
 
-  -pause screen
-
 ## License
   [MIT](https://choosealicense.com/licenses/mit/)
