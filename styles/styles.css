@@ -94,7 +94,7 @@ body {
   margin: 4px;
 }
 
-.parent-container {
+.parentcontainer {
   width: 600px;
   overflow: auto;
   margin: auto;
@@ -118,4 +118,12 @@ body {
   left: 0px;
   background-color: white;
   opacity: 0.6;
+}
+
+.userprompt {
+  width: 80%;
+  height: 40%;
+  background-color: #2C2F33;
+  border-radius: 10px;
+  margin: 50% auto;
 }

@@ -68,23 +68,15 @@
 
   const GAMEBOARD = 'gameboard';
 
-  const BUTTON_NAMES = ['PAUSE (P)', 'RESTART (R)', 'MUSIC OFF (M)', 'KEYS (K)'];
-  
-  let reqId;
-
-  let newBlock;
-
-  let nextBlock;
-
-  let pausedGame = false;
-
-  let pausedMusic = true;
+  const BUTTON_NAMES = ['PAUSE (P)', 'MUSIC OFF (M)', 'QUIT (Q)', 'KEYS (K)'];
 
   let backgroundMusic = loadBackgroundMusic();
 
   /**********************************************************/
 
   function initializeGamestate() {
+    GAMESTATE.reqId;
+
     GAMESTATE.level = 1;
 
     GAMESTATE.score = 0;
@@ -94,6 +86,10 @@
     GAMESTATE.tetrisboard = [];
 
     GAMESTATE.blockInterval = 750;
+
+    GAMESTATE.pausedMusic = true;
+
+    GAMESTATE.pausedGame = false;
 
     for(let i = 0; i < ROWS; i++){ 
       let temp = new Array(COL).fill(0);
@@ -119,7 +115,7 @@
   }
 
   function updateBlockstate(value) {
-    for (block of newBlock.blocks) {
+    for (block of GAMESTATE.newBlock.blocks) {
       let [row, col] = getRowCol(block);
 
       GAMESTATE.tetrisboard[row][col] = value;
@@ -135,7 +131,7 @@
   }
 
   function updateBlockCollection() {
-    newBlock.blocks.forEach(block => {
+    GAMESTATE.newBlock.blocks.forEach(block => {
       let [row, col] = getRowCol(block);
 
       GAMESTATE.blockCollection[row].push(block);
@@ -283,9 +279,9 @@
       blockConfig.left = 1;
     }
 
-    if (location == GAMEBOARD && nextBlock) {
+    if (location == GAMEBOARD && GAMESTATE.nextBlock) {
       for(let i = 0; i < BLOCKS.length; i++) {
-        if(BLOCKS[i].name == nextBlock.blockName) blockConfig.index= i;  
+        if(BLOCKS[i].name == GAMESTATE.nextBlock.blockName) blockConfig.index= i;  
       }
     }
 
@@ -295,13 +291,13 @@
 
     tempBlock.blocks.forEach(block => loc.append(block));
 
-    if(location == GAMEBOARD) newBlock = tempBlock;
+    if(location == GAMEBOARD) GAMESTATE.newBlock = tempBlock;
 
-    if(location == NEXTQUEUE) nextBlock = tempBlock;
+    if(location == NEXTQUEUE) GAMESTATE.nextBlock = tempBlock;
   }
 
   function gameOver() {
-    for(let block of newBlock.blocks) {
+    for(let block of GAMESTATE.newBlock.blocks) {
       let [row, col] = getRowCol(block);
 
       if(GAMESTATE.tetrisboard[row][col] == NON_MOVING_BLOCK) {
@@ -326,14 +322,14 @@
   }
 
   function validRotation() {
-    let index = (newBlock.currPos + 1) % 4;
+    let index = (GAMESTATE.newBlock.currPos + 1) % 4;
 
-    let nextPosition = newBlock.positions[index];
+    let nextPosition = GAMESTATE.newBlock.positions[index];
 
      for(let i = 0; i < nextPosition.length; i++) {
-       let x = newBlock.dx + nextPosition[i][0];
+       let x = GAMESTATE.newBlock.dx + nextPosition[i][0];
 
-       let y = newBlock.dy + nextPosition[i][1];
+       let y = GAMESTATE.newBlock.dy + nextPosition[i][1];
 
        if(x < 0 || x > 9) return false;
 
@@ -342,28 +338,28 @@
        if(GAMESTATE.tetrisboard[y][x] == NON_MOVING_BLOCK) return false;
     }
 
-    newBlock.currPos = index;
+    GAMESTATE.newBlock.currPos = index;
 
     return true;
   }
 
   function rotateClockwise() {
-    if(newBlock.blockName == 'O') return;
+    if(GAMESTATE.newBlock.blockName == 'O') return;
 
     if(!validRotation()) return; 
 
     updateBlockstate(EMPTY_SPACE);
 
-    let index = newBlock.currPos;
+    let index = GAMESTATE.newBlock.currPos;
 
-    let position = newBlock.positions[index]
+    let position = GAMESTATE.newBlock.positions[index]
 
     for(let i = 0; i < position.length; i++) {
-      let x = newBlock.dx + position[i][0];
+      let x = GAMESTATE.newBlock.dx + position[i][0];
       
-      let y = newBlock.dy + position[i][1];
+      let y = GAMESTATE.newBlock.dy + position[i][1];
 
-      let block = newBlock.blocks[i];
+      let block = GAMESTATE.newBlock.blocks[i];
 
       block.style.left = x * BLOCK_LENGTH + 'px';
 
@@ -376,7 +372,7 @@
   /**********************************************************/
 
   function invalidMove(event) {
-    for(let block of newBlock.blocks) {
+    for(let block of GAMESTATE.newBlock.blocks) {
       let [row, col] = getRowCol(block);
 
       switch(event.code) {
@@ -408,7 +404,7 @@
 
     updateBlockstate(EMPTY_SPACE);
 
-    for(let block of newBlock.blocks) {
+    for(let block of GAMESTATE.newBlock.blocks) {
       switch(evt.code) {
         case 'ArrowLeft':
           block.style.left = parseInt(block.style.left) - BLOCK_LENGTH + 'px';
@@ -422,11 +418,11 @@
       }
     }
 
-    if(evt.code == 'ArrowLeft') newBlock.dx--;
+    if(evt.code == 'ArrowLeft') GAMESTATE.newBlock.dx--;
 
-    if(evt.code == 'ArrowRight') newBlock.dx++;
+    if(evt.code == 'ArrowRight') GAMESTATE.newBlock.dx++;
 
-    if(evt.code == 'ArrowDown') newBlock.dy++;
+    if(evt.code == 'ArrowDown') GAMESTATE.newBlock.dy++;
 
     updateBlockstate(MOVING_BLOCK);
 
@@ -436,76 +432,86 @@
   /**********************************************************/
 
   function play() {
-    if(!newBlock) {
+    if(!GAMESTATE.newBlock) {
       spawnBlockOn(GAMEBOARD);
 
       spawnBlockOn(NEXTQUEUE);
 
       if(gameOver()) return;
-    
+
       updateBlockstate(MOVING_BLOCK);
     }
 
     let startTime = performance.now();
       
-    reqId = requestAnimationFrame( function moveBlock(currentTime) {
+    GAMESTATE.reqId = requestAnimationFrame( function moveBlock(currentTime) {
       let timeElapsed = currentTime - startTime;
 
       if(timeElapsed > GAMESTATE.blockInterval) {
         startTime = currentTime;
 
         if(!move()) {
-          nextBlock.blocks.forEach(block => block.remove());
-          newBlock = null;
+          GAMESTATE.nextBlock.blocks.forEach(block => block.remove());
+          GAMESTATE.newBlock = null;
           play();
           return;
         }
       }
 
-      reqId = requestAnimationFrame(moveBlock);
+      GAMESTATE.reqId = requestAnimationFrame(moveBlock);
     });
   }
 
   function pauseGame() {
-    if(pausedGame) {
+    if(GAMESTATE.pausedGame) {
       removeOpaqueScreen();
       document.addEventListener('keydown', gameKeys);
       document.querySelector('#pause').innerHTML = 'PAUSE (P)';
-      pausedGame = !pausedGame;
+      GAMESTATE.pausedGame = !GAMESTATE.pausedGame;
       play();
     }else {
       addOpaqueScreen();
       document.removeEventListener('keydown', gameKeys);
       document.querySelector('#pause').innerHTML = 'PLAY (P)';
-      pausedGame = !pausedGame;
-      window.cancelAnimationFrame(reqId);
+      GAMESTATE.pausedGame = !GAMESTATE.pausedGame;
+      window.cancelAnimationFrame(GAMESTATE.reqId);
     }
   }
 
-  function restartGame() {
-    document.querySelector('#pause').innerHTML = 'PAUSE (P)';
+  function quitGame() {
+    if(GAMESTATE.pausedGame) removeOpaqueScreen();
 
-    window.cancelAnimationFrame(reqId);
+    window.cancelAnimationFrame(GAMESTATE.reqId);
 
-    if(newBlock) newBlock.blocks.forEach(block => block.remove());
+    if(GAMESTATE.newBlock) GAMESTATE.newBlock.blocks.forEach(block => block.remove());
 
-    newBlock = null;
+    GAMESTATE.newBlock = null;
 
-    if(nextBlock) nextBlock.blocks.forEach(block => block.remove());
+    if(GAMESTATE.nextBlock) GAMESTATE.nextBlock.blocks.forEach(block => block.remove());
 
     for(let row of GAMESTATE.blockCollection) {
       for(let block of row) block.remove();
     }
 
-    removeOpaqueScreen();
+    removeEventListeners();
 
-    initializeGamestate();
+    document.querySelector('.settings').remove();
 
     resetScoreboard();
 
-    pausedGame = false;
+    if(!GAMESTATE.pausedMusic) backgroundMusic.pause();
 
-    play();
+    document.querySelector('.menu').style.display = 'block';
+
+    document.querySelector('.game').style.backgroundColor = '';
+  }
+
+  function removeEventListeners() {
+    document.removeEventListener('keydown', gameKeys);
+
+    document.documentElement.removeEventListener('keydown', setKeyBinds);
+
+    document.querySelector('.settings').removeEventListener('click', setMenuButtonListeners);
   }
 
   function addOpaqueScreen() {
@@ -552,13 +558,13 @@
   function playMusic() {
     let bgm = document.querySelector('#music');
 
-    if (pausedMusic) {
+    if (GAMESTATE.pausedMusic) {
       backgroundMusic.play();
-      pausedMusic = !pausedMusic;
+      GAMESTATE.pausedMusic = !GAMESTATE.pausedMusic;
       bgm.innerHTML = "MUSIC OFF (M)";
     }else {
       backgroundMusic.pause();
-      pausedMusic = !pausedMusic;
+      GAMESTATE.pausedMusic = !GAMESTATE.pausedMusic;
       bgm.innerHTML = "MUSIC ON (M)";
     }
   }
@@ -566,21 +572,21 @@
   function setKeyBinds(event) {
     if(event.key == 'm') playMusic();
 
-    if(event.key == 'r') restartGame();
-
     if(event.key == 'p') pauseGame();
+
+    if(event.key == 'q') quitGame();
   }
 
   function setMenuButtonListeners(event) {
     if(event.target.id == 'music') playMusic();
 
-    if(event.target.id == 'restart') restartGame();
-
     if(event.target.id == 'pause') pauseGame();
+
+    if(event.target.id == 'quit') quitGame();
   }
 
-  document.querySelector('#play').addEventListener('click', function(event){
-    document.querySelector('.menu').remove();
+  function gameStart(event){
+    document.querySelector('.menu').style.display = 'none';
 
     document.querySelector('.game').style.backgroundColor = '#2C2F33';
 
@@ -588,7 +594,11 @@
 
     loadSettingsMenu();
 
-    if(pausedMusic) playMusic();
+    backgroundMusic.currentTime = 0;
+
+    playMusic();
 
     play();
-  });
+  }
+
+  document.querySelector('#play').addEventListener('click', gameStart);
