@@ -47,7 +47,7 @@ body {
   top: 50%;
 }
 
-.button {
+button {
   width: 80%;
   border: 1px solid #2C2F33;
   border-radius: 10px;
@@ -60,14 +60,16 @@ body {
   font-weight: 900;
   line-height: 2;
   text-align: center;
+  display:block;
   margin: 10px auto;
 }
 
-.menu .button{
+.menu button{
   font-size: 28px;
+  margin: 10% auto;
 }
 
-.button:hover {
+button:hover {
   color: #2C2F33;
   background-color: white;
   cursor: pointer;

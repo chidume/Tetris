@@ -531,7 +531,7 @@
     settingsElem.classList.add('settings');
 
     BUTTON_NAMES.forEach( buttonName => {
-      let buttonElement = document.createElement('div');
+      let buttonElement = document.createElement('button');
       buttonElement.classList.add('button');
       buttonElement.id = buttonName.split(" ")[0].toLowerCase();
       buttonElement.innerHTML = buttonName;
