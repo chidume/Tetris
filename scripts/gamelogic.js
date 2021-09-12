@@ -470,7 +470,7 @@
       GAMESTATE.pausedGame = !GAMESTATE.pausedGame;
       play();
     }else {
-      addOpaqueScreen();
+      addOpaqueScreen(0.6);
       document.removeEventListener('keydown', gameKeys);
       document.querySelector('#pause').innerHTML = 'PLAY (P)';
       GAMESTATE.pausedGame = !GAMESTATE.pausedGame;
@@ -514,9 +514,10 @@
     document.querySelector('.settings').removeEventListener('click', setMenuButtonListeners);
   }
 
-  function addOpaqueScreen() {
+  function addOpaqueScreen(opacity) {
     let opaqueScreen = document.createElement('div');
     opaqueScreen.classList.add('screen');
+    if(opacity) opaqueScreen.style.opacity = '0.6';
     document.querySelector('#gameboard').append(opaqueScreen);
   }
 
